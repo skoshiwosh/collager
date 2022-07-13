@@ -1,12 +1,13 @@
-#!/usr/bin/env python
-'''
-    Launch window to create mirrored tiled images from source image file
+#!/usr/bin/env python3
+"""
+    Launch GUI to create mirrored tiled images from source image file.
     
     File name: collager.py
     Author: Suzanne Berger
     Date created: 03/15/2018
-    Python Version: 2.7
-'''
+    Updated: 05/16/2022
+    Python Version: 3.9
+"""
 
 import sys
 import os
@@ -20,7 +21,7 @@ from PySide2 import QtUiTools
 # globals
 #########################################################
 
-VERSION = "V01"
+VERSION = "V02"
 
 logging.basicConfig(level=logging.INFO)
 logging.info( " %s Version %s" % (sys.argv[0], VERSION))
@@ -124,7 +125,7 @@ class CollagerWin(QtWidgets.QWidget):
         
         self.status_lineEdit.setText("Saving collages to directory: %s" % self.image_dir)
         
-        for cllkey, value in self.cllimagemap.iteritems():
+        for cllkey, value in self.cllimagemap.items():
             this_groupBox = value[0]
             if this_groupBox.isChecked():
                 this_lineEdit_objectname = "%s_lineEdit" % cllkey
@@ -140,7 +141,7 @@ class CollagerWin(QtWidgets.QWidget):
         logging.info("Resetting collage window")
         self.src_lineEdit.clear()
         self.image_dir = self.image_file = None
-        for cllkey, value in self.cllimagemap.iteritems():
+        for cllkey, value in self.cllimagemap.items():
             this_groupBox = self.cllimagemap[cllkey][0]
             this_groupBox.setChecked(True)
             self.cllimagemap[cllkey] = [this_groupBox]
@@ -234,7 +235,6 @@ class CollagerWin(QtWidgets.QWidget):
                     
         src_images = []
         self.collages = []
-
         for i in range(4):
             src_images = patterns[i]
             target_image = QtGui.QImage(target_width, target_height, QtGui.QImage.Format_ARGB32_Premultiplied)
