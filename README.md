@@ -7,6 +7,8 @@ ToDo:
 
 •    Combine both GUI and batch version into one script that runs either in GUI or batch mode.
 
+•    Add and improve docstrings and comments. 
+
 Files:
 
 •    collager.py - This is GUI version for tiling mirrored input image.
