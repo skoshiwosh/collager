@@ -9,7 +9,7 @@ ToDo:
 
 Files:
 
-•    collager.py - This is Gui version for tiling mirrored input image.
+•    collager.py - This is GUI version for tiling mirrored input image.
 
 •    collager_done.png - This displays GUI with tiled mirrored images before saving selected. 
 
@@ -17,5 +17,5 @@ Files:
 
 •    collage_cmd.py - This is a batch version of tiling mirrored images. However up to 8 combinations of tiling and mirroring can be generated. The optional argument -i allows user to give a list of indices from the list of patterns displayed.
 
-•    collage.sh - This is a shell script that allows running collage_cmd using mayapy that has PySide2 installed. When I first developed these scripts I was using Python 2.7 and did not have PySide2 installed with my generic python installation. I now have Python 3 installed along with PySide2.
+•    collager.sh, collage_cmd.sh - These shell scripts allow running underlying python scripts using mayapy that has PySide2 installed. When I first developed these scripts I was using Python 2.7 and did not have PySide2 installed with my generic python installation. I now have Python 3 installed along with PySide2.
 
