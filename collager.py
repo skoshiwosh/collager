@@ -2,7 +2,7 @@
 """
     Launch GUI to create mirrored tiled images from source image file.
     
-    File name: collager.py
+    File: collager.py
     Author: Suzanne Berger
     Date created: 03/15/2018
     Updated: 05/16/2022
@@ -33,19 +33,23 @@ logging.info( " %s Version %s" % (sys.argv[0], VERSION))
 class CollagerWin(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
+        """ Create CollagerWin object inherited from QWidget. """
         QtWidgets.QWidget.__init__(self, parent)
         
+        # initialize object attributes
+        # tiled images are stored in dictionary before saving to files
         self.cllimagemap = {}
         self.image_dir = self.image_file = None
-        
         self.empty_pixmap = QtGui.QPixmap(300, 200)
         self.empty_pixmap.fill(QtGui.QColor(120, 120, 160))
         
+        # initialize user interface and signal slot connections
         self._initUI()
         self._connectSignals()
         self.show()
 
     def _initUI(self):
+        """ Create widgets and layout. """
         self.setGeometry(100, 100, 800, 700)
         self.setWindowTitle('Collager')
         
@@ -70,6 +74,7 @@ class CollagerWin(QtWidgets.QWidget):
         imageFrame = QtWidgets.QGroupBox()
         imageFrame.setMinimumSize(760, 600)
         
+        # QGroupBox labels denote image tile pattern
         self.cllbox0 = QtWidgets.QGroupBox('N-H-V-HV')
         self.mkbox('cll0', self.cllbox0)
         
@@ -110,6 +115,7 @@ class CollagerWin(QtWidgets.QWidget):
         self.setLayout(mainLayout)
         
     def _connectSignals(self):
+        """ Create signal slot connections. """
         self.src_button.clicked.connect(self.on_src_clicked)
         self.buttonbox.rejected.connect(self.close)
         self.buttonbox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.save)
@@ -119,12 +125,15 @@ class CollagerWin(QtWidgets.QWidget):
         event.accept()
     
     def save(self):
+        """ Save checked tiled images into same directory as source image file. """
         if self.image_dir is None:
             self.status_lineEdit.setText("Unable to save without directory setting")
             return
         
         self.status_lineEdit.setText("Saving collages to directory: %s" % self.image_dir)
         
+        # iterate through dictionary to get each QGroupBox object and tiled QImage
+        # only save QImage if QGroupBox object is checked
         for cllkey, value in self.cllimagemap.items():
             this_groupBox = value[0]
             if this_groupBox.isChecked():
@@ -138,6 +147,7 @@ class CollagerWin(QtWidgets.QWidget):
         self.status_lineEdit.setText("Successfully saved all collages to %s" % self.image_dir)
     
     def reset(self):
+        """ Reset GUI by clearing entries and setting image boxes to original solid grey. """
         logging.info("Resetting collage window")
         self.src_lineEdit.clear()
         self.image_dir = self.image_file = None
@@ -157,6 +167,7 @@ class CollagerWin(QtWidgets.QWidget):
         self.status_lineEdit.setText("Ready:")
 
     def on_src_clicked(self):
+        """ Launch file selection dialog to load source image to be tiled. """
         self.srcfile = QtWidgets.QFileDialog.getOpenFileName(self,'Load Image File','/Users/suzanneberger/Pictures',
                                                      "image files (*.jpg *.png *.tif)")[0]
 
@@ -166,6 +177,10 @@ class CollagerWin(QtWidgets.QWidget):
             self.mkcllpix()
 
     def mkbox(self, cllkey, this_groupBox):
+        """ Setup QGroupBox to contain tiled image and checkable label.
+            
+            QGroupBox object is stored in dictionary with object name derived from dictionary key.
+        """
         self.cllimagemap[cllkey] = [this_groupBox]
         this_groupBox.setCheckable(True)
         this_groupBox.setChecked(True)
@@ -186,8 +201,12 @@ class CollagerWin(QtWidgets.QWidget):
         this_groupBox.setLayout(this_layout)
 
     def mkcllpix(self):
+        """ Set each QGroupBox to image tiled from source image. """
+        
+        # first create as QImage objects saved in dictionary
         self.build_collages()
     
+        # then set each QImage to QPixMap assigned to QGroupBox's QLabel object
         for i in range(4):
             cllkey = 'cll%d' % i
             if cllkey not in self.cllimagemap:
@@ -217,6 +236,7 @@ class CollagerWin(QtWidgets.QWidget):
 
 
     def build_collages(self):
+        """ Draw tiled source image in all patterns and save each in dictionary. """
         src_image = QtGui.QImage(self.srcfile)
         src_imageH = src_image.mirrored(True, False)
         src_imageV = src_image.mirrored(False, True)
