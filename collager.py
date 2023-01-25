@@ -24,7 +24,7 @@ from PySide2 import QtUiTools
 VERSION = "V02"
 
 logging.basicConfig(level=logging.INFO)
-logging.info( " %s Version %s" % (sys.argv[0], VERSION))
+logging.info(f" {sys.argv[0]} Version {VERSION}")
 
 #########################################################
 # CollagerWin
@@ -130,21 +130,21 @@ class CollagerWin(QtWidgets.QWidget):
             self.status_lineEdit.setText("Unable to save without directory setting")
             return
         
-        self.status_lineEdit.setText("Saving collages to directory: %s" % self.image_dir)
+        self.status_lineEdit.setText(f"Saving collages to directory: {self.image_dir}")
         
         # iterate through dictionary to get each QGroupBox object and tiled QImage
         # only save QImage if QGroupBox object is checked
         for cllkey, value in self.cllimagemap.items():
             this_groupBox = value[0]
             if this_groupBox.isChecked():
-                this_lineEdit_objectname = "%s_lineEdit" % cllkey
+                this_lineEdit_objectname = f"{cllkey}_lineEdit"
                 this_lineEdit = this_groupBox.findChild(QtWidgets.QLineEdit, this_lineEdit_objectname)
                 this_path = os.path.normpath(os.path.join(self.image_dir, this_lineEdit.text()))
                 this_image = value[-1]
                 this_image.save(this_path, quality=100)
-                logging.info("Saving collage %s to image file %s" % (cllkey, this_path))
+                logging.info(f"Saving collage {cllkey} to image file {this_path}")
             
-        self.status_lineEdit.setText("Successfully saved all collages to %s" % self.image_dir)
+        self.status_lineEdit.setText(f"Successfully saved all collages to {self.image_dir}")
     
     def reset(self):
         """ Reset GUI by clearing entries and setting image boxes to original solid grey. """
@@ -156,11 +156,11 @@ class CollagerWin(QtWidgets.QWidget):
             this_groupBox.setChecked(True)
             self.cllimagemap[cllkey] = [this_groupBox]
             
-            this_lineEdit_objectname = "%s_lineEdit" % cllkey
+            this_lineEdit_objectname = f"{cllkey}_lineEdit"
             this_lineEdit = this_groupBox.findChild(QtWidgets.QLineEdit, this_lineEdit_objectname)
             this_lineEdit.clear()
             
-            this_label_objectname = "%s_label" % cllkey
+            this_label_objectname = f"{cllkey}_label"
             this_label = this_groupBox.findChild(QtWidgets.QLabel, this_label_objectname)
             this_label.setPixmap(self.empty_pixmap)
         
@@ -184,16 +184,16 @@ class CollagerWin(QtWidgets.QWidget):
         self.cllimagemap[cllkey] = [this_groupBox]
         this_groupBox.setCheckable(True)
         this_groupBox.setChecked(True)
-        this_groupBox.setObjectName("%s_groupBox" % cllkey)
+        this_groupBox.setObjectName(f"{cllkey}_groupBox")
 
         this_lineEdit = QtWidgets.QLineEdit()
         this_lineEdit.setFixedHeight(21)
         this_lineEdit.setFixedWidth(300)
-        this_lineEdit.setObjectName("%s_lineEdit" % cllkey)
+        this_lineEdit.setObjectName(f"{cllkey}_lineEdit")
         
         this_label = QtWidgets.QLabel()
         this_label.setPixmap(self.empty_pixmap)
-        this_label.setObjectName("%s_label" % cllkey)
+        this_label.setObjectName(f"{cllkey}_label")
         
         this_layout = QtWidgets.QVBoxLayout()
         this_layout.addWidget(this_lineEdit)
