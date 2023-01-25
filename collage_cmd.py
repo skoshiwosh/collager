@@ -13,7 +13,8 @@ Returns:
 File: collage_cmd.py
 Author: Suzanne Berger
 Date: 11/25/2017
-Python Version: 2.7 & 3.9
+Updated: 01/24/2023
+Python Version: 3.9
 """
 
 
@@ -29,11 +30,11 @@ from PySide2 import QtCore, QtGui
 # globals
 #########################################################
 
-VERSION = "V04"
+VERSION = "V05"
 
 #logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.DEBUG)
-logging.info( " %s Version %s" % (sys.argv[0], VERSION))
+logging.info( f" {sys.argv[0]} Version {VERSION}")
 
 
 #########################################################
@@ -65,7 +66,7 @@ def tile_one(image_path, image_dir, image_file):
     src_height = src_image.height()
 
     parts = os.path.splitext(image_file)
-    target_path = os.path.normpath(os.path.join(image_dir, "%s_tile.jpg" % parts[0]))
+    target_path = os.path.normpath(os.path.join(image_dir, f"{parts[0]}_tile.jpg"))
 
     src_width = src_image.width()
     src_height = src_image.height()
@@ -96,11 +97,11 @@ def build_collage(image_path, image_dir, image_file, indices):
     
     parts = os.path.splitext(image_file)
     if len(indices) > 1:
-        imageH_path = os.path.normpath(os.path.join(image_dir, '%s_H%s' % (parts[0], parts[1])))
+        imageH_path = os.path.normpath(os.path.join(image_dir, f'{parts[0]}_H{parts[1]}'))
         src_imageH.save(imageH_path,quality=100)
-        imageV_path = os.path.normpath(os.path.join(image_dir, '%s_V%s' % (parts[0], parts[1])))
+        imageV_path = os.path.normpath(os.path.join(image_dir, f'{parts[0]}_V{parts[1]}'))
         src_imageV.save(imageV_path,quality=100)
-        imageHV_path = os.path.normpath(os.path.join(image_dir, '%s_HV%s' % (parts[0], parts[1])))
+        imageHV_path = os.path.normpath(os.path.join(image_dir, f'{parts[0]}_HV{parts[1]}'))
         src_imageHV.save(imageHV_path,quality=100)
     
     patterns = [[src_image, src_imageH, src_imageV, src_imageHV],
@@ -118,15 +119,15 @@ def build_collage(image_path, image_dir, image_file, indices):
     target_width = src_width * 2
     target_height = src_height * 2
     
-    logging.info(" src_width = {} src_height = {}".format(src_width,src_height))
-    logging.info(" target_width = {} target_width = {}".format(target_width,target_height))
+    logging.info(f" src_width = {src_width} src_height = {src_height}")
+    logging.info(f" target_width = {target_width} target_width = {target_height}")
     
     target_image = QtGui.QImage(target_width, target_height, QtGui.QImage.Format_ARGB32_Premultiplied)
     painter = QtGui.QPainter(target_image)
     src_images = []
     #for i in range(len(patterns)):        *** previously could only generate entire list of patterns
     for i in indices:
-        target_path = os.path.normpath(os.path.join(image_dir, "%s_CLL%d.jpg" % (parts[0], i)))
+        target_path = os.path.normpath(os.path.join(image_dir, f"{parts[0]}_CLL{i}.jpg"))
         src_images = patterns[i]
         painter.drawImage(0, 0, src_images[0])
         painter.drawImage(src_width-1, 0, src_images[1])
@@ -164,10 +165,10 @@ if __name__ == '__main__':
     parser.add_argument('image_path', action='store', help='input image file path to be tiled')
     args = parser.parse_args()
     
-    logging.debug(" args: {}".format(args))
+    logging.debug(f" args: {args}")
     
     if not os.path.isfile(args.image_path):
-        logging.error(" Invalid file argument: {}\n".format(args.image_path))
+        logging.error(f" Invalid file argument: {args.image_path}\n")
         parser.print_help()
         sys.exit(1)
     
@@ -178,9 +179,9 @@ if __name__ == '__main__':
         tile_one(args.image_path, image_dir, image_file)
     else:
         indices = parse_indices(args.patterns)
-        logging.debug("pattern indices: {}".format(indices))
+        logging.debug(f"pattern indices: {indices}")
         build_collage(args.image_path, image_dir, image_file, indices)
 
-    logging.info(" Successfully Collaged %s" % args.image_path)
+    logging.info(f" Successfully Collaged {args.image_path}")
 
     sys.exit()
