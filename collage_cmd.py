@@ -24,7 +24,7 @@ import argparse
 import logging
 from pprint import pprint
 
-from PySide2 import QtCore, QtGui
+from PySide6 import QtCore, QtGui
 
 #########################################################
 # globals

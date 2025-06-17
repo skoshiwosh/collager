@@ -5,7 +5,7 @@
     File: collager.py
     Author: Suzanne Berger
     Date created: 03/15/2018
-    Updated: 05/16/2022
+    Updated: 03/03/2024
     Python Version: 3.9
 """
 
@@ -14,14 +14,14 @@ import os
 import logging
 from pprint import pprint
 
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2 import QtUiTools
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtUiTools
 
 #########################################################
 # globals
 #########################################################
 
-VERSION = "V02"
+VERSION = "V06"
 
 logging.basicConfig(level=logging.INFO)
 logging.info(f" {sys.argv[0]} Version {VERSION}")
@@ -149,22 +149,30 @@ class CollagerWin(QtWidgets.QWidget):
     def reset(self):
         """ Reset GUI by clearing entries and setting image boxes to original solid grey. """
         logging.info("Resetting collage window")
+        self.srcfile = ""
         self.src_lineEdit.clear()
         self.image_dir = self.image_file = None
         for cllkey, value in self.cllimagemap.items():
-            this_groupBox = self.cllimagemap[cllkey][0]
-            this_groupBox.setChecked(True)
-            self.cllimagemap[cllkey] = [this_groupBox]
-            
+            this_groupBox = value[0]
             this_lineEdit_objectname = f"{cllkey}_lineEdit"
             this_lineEdit = this_groupBox.findChild(QtWidgets.QLineEdit, this_lineEdit_objectname)
+            this_text = this_lineEdit.text()
+            logging.info(f"*** {this_text}")
             this_lineEdit.clear()
+            #this_lineEdit.update()
             
             this_label_objectname = f"{cllkey}_label"
             this_label = this_groupBox.findChild(QtWidgets.QLabel, this_label_objectname)
             this_label.setPixmap(self.empty_pixmap)
+            #this_label.update()
+
+        #self.cllbox0.update()
+        #self.cllbox1.update()
+        #self.cllbox2.update()
+        #self.cllbox3.update()
         
         self.status_lineEdit.setText("Ready:")
+        return
 
     def on_src_clicked(self):
         """ Launch file selection dialog to load source image to be tiled. """
@@ -208,7 +216,7 @@ class CollagerWin(QtWidgets.QWidget):
     
         # then set each QImage to QPixMap assigned to QGroupBox's QLabel object
         for i in range(4):
-            cllkey = 'cll%d' % i
+            cllkey = f"cll{i}"
             if cllkey not in self.cllimagemap:
                 print("should raise exception")
                 continue
@@ -218,14 +226,14 @@ class CollagerWin(QtWidgets.QWidget):
             parts = self.image_file.split('.')
             parts[0] = parts[0] + '_' + cllkey
             this_cll_file = '.'.join(parts)
-            this_lineEdit_objectname = "%s_lineEdit" % cllkey
+            this_lineEdit_objectname = f"{cllkey}_lineEdit"
             this_lineEdit = this_groupBox.findChild(QtWidgets.QLineEdit, this_lineEdit_objectname)
             this_lineEdit.setText(this_cll_file)
             
             this_image = self.cllimagemap[cllkey][-1]
             this_pixmap = QtGui.QPixmap(this_image).scaledToWidth(300)
             
-            this_label_objectname = "%s_label" % cllkey
+            this_label_objectname = f"{cllkey}_label"
             this_label = this_groupBox.findChild(QtWidgets.QLabel, this_label_objectname)
 
             if this_label is None:
@@ -264,10 +272,10 @@ class CollagerWin(QtWidgets.QWidget):
             painter.drawImage(0, src_height-1, src_images[2])
             painter.drawImage(src_width-1, src_height-1, src_images[3])
             
-            cllkey = 'cll%d' % i
+            cllkey = f"cll{i}"
             if cllkey in self.cllimagemap:
                 self.cllimagemap[cllkey].append(target_image)
-                logging.info("Adding collage %s to image map" % cllkey)
+                logging.info(f"Adding collage {cllkey} to image map")
             else:
                 print("should raise exception")
                 continue
@@ -284,6 +292,6 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
     cllwin = CollagerWin()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
