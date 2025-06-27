@@ -1,5 +1,5 @@
 # collager
-Python and PySide2 scripts that create mirrored tiled images from single input image.
+Python and PySide6 scripts that create mirrored tiled images from single input image.
 
 GUI version is collager.py that generates 4 combinations of image flipped and tiled. The batch version, collage_cmd.py, accepts input image argument and can tile up to 8 combinations of input image. The batch version also has an optional argument which specifies indices into tile pattern list which is displayed with help (-h or —help) optional argument. These scripts were created for my own use on a personal project for creating generative art.
 
